@@ -57,6 +57,62 @@ Der er masser af andre fejl der kan opstå når man arbejder med filer, men oven
 
 Eksempelvis at koden forsøger at læse en fil der ikke findes, eller at koden forsøger at gemme en fil i en mappe der ikke findes. 
 
-Så en fejl kan altså være et objekt af alle typer der implementerer Error protokollen, men hvad gør man når man vil udløse en sådan fejl.
+Så en fejl kan altså være et objekt af alle typer der implementerer Error protokollen, men hvad gør du når du bliver nød til at udløse en fejl, fordi koden i dit program ellers kommer i en uønsket tilstand.
+
+## Man smider en fejl
+
+Når dit program kommer i en tilstand hvor du bliver nød til at sige "STOP der er sket en fejl" ja så smidder du bogstavligt fejlen. 
+
+Kommandoen du skal bruge hedder throw og det du smider er en fejl.
+
+```Swift
+enum MatematikFejl : Error {
+	case DivisionMedNul
+)
+
+var tæller = 10
+var nævner = 0
+
+//Man må ikke dividere med nul, så hvis nævner er 0 smider vi en fejl
+
+if nævner == 0 {
+	throw MatematikFejl.DivisionMedNul
+}
+```
+
+Ovenstående kode er ikke komplet og vil ikke compilere. Men det tjener til det formål at du kan se det simple i at en fejl opstår og vi bliver nød til at smide fejlen. 
+
+I eksemplet har vi oven i købet defineret en slags beskrivende fejl ved at lave en enum der implementere **Error** protokollen og som gør det nemt at signalere hvilken type fejl der er tale om.
+
+Vi kunne undlade at lave vores egen **MatematikFejl** og i stedet bare smide en fejl således
+
+```Swift
+var tæller = 10
+var nævner = 0
+
+//Man må ikke dividere med nul, så hvis nævner er 0 smider vi en fejl
+
+if nævner == 0 {
+	throw Error
+}
+```
+
+Men som du snart vil se, er fordelen ved at lave vores egen fejl, den at vi kan fange fejlen og reagerer på den afhængigt af hvilken type fejl der er tale om. 
+
+## Hvordan reagerer vi på en fejl.
+
+Se svaret er faktisk logisk. Når nogen kaster noget til dig kan du vælge at gribe det eller ej.
+
+Og sådan er det også ved fejl, for vi kaster en fejl og så kan vi vælge at gribe den. Kommandoen til at smide/kaste en fejl hedder **throw** og kommandoen vi bruger til at gribe en fejl hedder **catch**
+
+Men det er ikke nødvendigt at gribe en fejl hver gang, det er dog strengt nødvendigt at håndtere en fejl, og Swift kompileren vil hjælpe os, så hvis du kalder kode som kan smide en fejl, så vil kompileren tvinge dig til at tage stilling til hvad du vil gøre med denne fejl.
+
+Du får simpelthen fejl når du kompilere koden hvis ikke du har taget stilling til hvorledes en fejl håndteres. 
+
+## Håndtering af kode der smider en fejl
+
+Når kode smider en fejl er der flere måder vi kan håndtere det på.
+
+
 
 
