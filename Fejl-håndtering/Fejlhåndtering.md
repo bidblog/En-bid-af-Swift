@@ -113,6 +113,57 @@ Du får simpelthen fejl når du kompilere koden hvis ikke du har taget stilling 
 
 Når kode smider en fejl er der flere måder vi kan håndtere det på.
 
+Kommandoen (keywordet) vi skal bruge når vi kalder kode der kan smide en fejl hedder **try**.
+
+Altså det engelske ord for "prøv", og du kan huske det på at du i koden prøver at kalde koden og håber det går godt. 
+
+Men hvis ikke det går godt skal du tage stilling til hvordan du vil reagere på fejlen.
+
+Du kan vælge at gribe fejlen der bliver smidt og det kan se sådan her ud.
+
+```Swift
+var tæller = 10
+var nævner = 0
+
+//Man må ikke dividere med nul, så hvis nævner er 0 smider vi en fejl
+
+//Fordi vi smider en fejl indkapsler vi kaldet der smider en fejl med try, og fordi vi gerne vil gribe fejlen og reagerer på den så kaplser vi try ind i en do/catch syntax
+
+do {
+	try {
+		if nævner == 0 {
+			throw Error
+		}
+	}
+}
+catch {
+	print("Hov der skete en fejl")
+}
+```
+
+- [ ] Test ovenstående i playground (try kan muligvis ikke stå foran en block) #todo
+
+### do og catch keywords
+
+Når vi vil gribe en fejl der smides så gør vi det med en catch blok.
+
+Syntaxen for do/catch er følgende:
+
+```Swift
+do {
+	// her kaldes koden der kan fejle, og kald af fejlende kode skal foranstilles med et try
+	try funktionDerSmiderEnFejl()
+}
+catch <fejltype a> {
+	// Her skriver du kode der skal reagere på fejl type a
+}
+catch <fejltype b> {
+	// Her skriver du kode der skal reagere på fejl type b
+}
+catch {
+	// Hvis ikke du har angivet en fejltype er der en catch-all funktion som vil fange fejlen uanset hvilken type den er.
+}
+```
 
 
 
