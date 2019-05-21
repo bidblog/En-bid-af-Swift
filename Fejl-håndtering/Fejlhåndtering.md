@@ -61,9 +61,9 @@ Så en fejl kan altså være et objekt af alle typer der implementerer Error pro
 
 ## Man smider en fejl
 
-Når dit program kommer i en tilstand hvor du bliver nød til at sige "STOP der er sket en fejl" ja så smidder du bogstavligt fejlen. 
+Når dit program kommer i en tilstand hvor du bliver nød til at sige "STOP der er sket en fejl" ja så smider du bogstavligt fejlen. 
 
-Kommandoen du skal bruge hedder throw og det du smider er en fejl.
+Kommandoen du skal bruge hedder **throw** og det du smider er en fejl.
 
 ```Swift
 enum MatematikFejl : Error {
@@ -80,20 +80,25 @@ if nævner == 0 {
 }
 ```
 
-Ovenstående kode er ikke komplet og vil ikke compilere. Men det tjener til det formål at du kan se det simple i at en fejl opstår og vi bliver nød til at smide fejlen. 
+Ovenstående kode er ikke komplet og vil ikke kompilerer. Men det tjener til det formål at du kan se det simple i at en fejl opstår og vi bliver nød til at smide fejlen. 
 
-I eksemplet har vi oven i købet defineret en slags beskrivende fejl ved at lave en enum der implementere **Error** protokollen og som gør det nemt at signalere hvilken type fejl der er tale om.
+I eksemplet har vi oven i købet defineret en slags beskrivende fejl ved at lave en enum der implementerer **Error** protokollen og som gør det nemt at signalere hvilken type fejl der er tale om.
 
-Vi kunne undlade at lave vores egen **MatematikFejl** og i stedet bare smide en fejl således
+Vi kunne undlade at lave vores egen **MatematikFejl** og i stedet bare smide en fejl ved at udvide en af de eksiterende typer til at håndtere en fejl således
 
 ```Swift
 var tæller = 10
 var nævner = 0
 
+extension String : Error {
+	// Vi gør det muligt at en fejl bare kan være en streng ved at lade String implementere Error protokollen
+}
+	
 //Man må ikke dividere med nul, så hvis nævner er 0 smider vi en fejl
 
 if nævner == 0 {
-	throw Error
+	// Vi kan smide en fejl som en streng.
+	throw "Fejl streng"
 }
 ```
 
@@ -130,18 +135,13 @@ var nævner = 0
 //Fordi vi smider en fejl indkapsler vi kaldet der smider en fejl med try, og fordi vi gerne vil gribe fejlen og reagerer på den så kaplser vi try ind i en do/catch syntax
 
 do {
-	try {
-		if nævner == 0 {
-			throw Error
-		}
-	}
+	try divider(tæller med nævner)
 }
 catch {
 	print("Hov der skete en fejl")
 }
 ```
 
-- [ ] Test ovenstående i playground (try kan muligvis ikke stå foran en block) #todo
 
 ### do og catch keywords
 
@@ -164,6 +164,51 @@ catch {
 	// Hvis ikke du har angivet en fejltype er der en catch-all funktion som vil fange fejlen uanset hvilken type den er.
 }
 ```
+
+Catch sektionen af en do/catch viser med tydelighed hvorfor en **Error** ofte laves som en enum. 
+
+```Swift
+enum LagerFejl : Error {
+	case ingenBeholdning
+	case aktuelBeholdningLavereEnd(aktuelBeholdning : Int)
+}
+
+do {
+	try fjernFraLager(antalVarer 5)
+}
+catch LagerFejl.ingenBeholdning {
+	print ("Ingen varer på lageret")
+}
+catch LagerFejl.aktuelBeholdningLavereEnd(let aktuelBeholdning) {
+	print ("Der er kun \(aktuelBeholdning) på lageret")
+}
+catch {
+	print ("Ukendt Fejl")
+}
+```
+
+Ovenstående viser et eksempel hvor vi har defineret en enum med de 2 fejl der kan opstå i en funktion vi kalder hvor vi forsøger at fjerne et antal varer fra et lager.
+
+En af udfaldene i fejl enum typen har en associeret værdi, og den kan vi bruge når vi skal fange og behandle fejlen.
+
+## Funktioner der smider fejlen
+
+**try** kan kun skrives foran et kald af en funktion som kan smide en fejl.
+
+Kompileren vil brokke sig hvis ikke funktionen er markeret til at kunne smide en fejl, så det skal angives.
+
+Man angiver at en funktion kan smide en fejl ved skrive **throws** efter argument listen og før en eventuel retur type.
+
+```Swift
+func divider(tæller : Double, med nævner : Double) throws -> Double { ... }
+
+//Funktionen kaldes herefter således
+let resultat = try divider(20.0 med 5)
+```
+
+Kompileren hjælper os med at skrive **try** og **throws**.
+
+Hvis funktionen smider en fejl som ikke er håndteret inde i funktionen, så kræver kompileren at vi skriver **throws** i funktions erklæringen, og kompileren vil også tvinge os til at skrive **try** foran kaldet til funktionen, når nu vi ved at den kan smide en fejl.
 
 
 
