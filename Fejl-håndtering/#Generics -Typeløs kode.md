@@ -16,19 +16,27 @@ Tag nedenstående eksempel som bytter rundt på 2 heltal
 var tal1 = 5
 var tal2 = 10
 
-func ombyt(inout tal1 : Int, inout med tal2 : Int) {
-	var førsteTal = tal1
+func ombyt(_ tal1 : inout Int, med tal2 : inout Int) {
+	let ombytning = tal2
 	
-	tal1 = tal2
-	tal2 = førsteTal
+	tal2 = tal1
+	tal1 = ombytning
 }
 
 print (tal1,tal2)
-ombyt(tal1, med tal2)
+ombyt(&tal1, med &tal2)
 print (tal1,tal2)
 ```
 
 Funktionen ovenfor tager 2 reference variabler og bytter værdierne rundt.
+
+**inout** keywordet der står foran typen betyder at der overføres en reference og ikke en kopi så hvis værdierne rettes i funktionen så rettes der altså i den kaldende værdi.
+
+Derfor skal argumenterne i kald til funktionen også forindstilles med **&** tegnet.
+
+```Swift
+ombyt(&tal1, med &tal2)
+```
 
 Det virker fint fordi begge tal er heltal, men hvad nu hvis man vil have den samme funktion for en anden type.
 
@@ -38,18 +46,18 @@ I et type sikkert sprog som Swift, betyder det at vi er nød til at lave stort s
 
 ```Swift
 
-func ombytHeltal(inout tal1 : Int, inout med tal2 : Int) {
-	var førsteTal = tal1
+func ombytHeltal(_ tal1 : inout Int, med tal2 : inout Int) {
+	let ombytning = tal2
 	
-	tal1 = tal2
-	tal2 = førsteTal
+	tal2 = tal1
+	tal1 = ombytning
 }
 
-func ombytKommatal(inout tal1 : Double, inout med tal2 : Double) {
-	var førsteTal = tal1
-	
-	tal1 = tal2
-	tal2 = førsteTal
+func ombytKommatal(_ tal1 : inout Double, med tal2 : inout Double) {
+	let ombytning = tal2
+
+ 	tal2 = tal1
+	tal1 = ombytning
 }
 ```
 
@@ -64,19 +72,19 @@ Så hvordan sikrer man sig i et type sikkert sprog mod at skulle skrive det samm
 Løsningen på at undgå at skulle skrive den samme kode for alle typer, er at anvende generiske (eller Genrics) kode.
 
 ```Swift
-func ombytHeltal(inout tal1 : Int, inout med tal2 : Int) {
-	var førsteTal = tal1
+func ombytHeltal(_ tal1 : inout Int, med tal2 : inout Int) {
+	let ombytning = tal2
 	
-	tal1 = tal2
-	tal2 = førsteTal
+	tal2 = tal1
+	tal1 = ombytning
 }
 
 // kan skrives mere generisk således
-func ombyt<T>(inout tal1 : T, inout med tal2 : T) {
-	var førsteTal = tal1
+func ombyt<T>(_ tal1 : inout T, med tal2 : inout T) {
+	let ombytning = tal2
 	
-	tal1 = tal2
-	tal2 = førsteTal
+	tal2 = tal1
+	tal1 = ombytning
 }
 ```
 
@@ -90,11 +98,11 @@ T er altså ikke en type men et alias vi angiver. Vi kunne have valgt at kalde d
 
 ```Swift
 
-func ombyt<EtAliasForEnType>(inout tal1 : EtAliasForEnType, inout med tal2 : EtAliasForEnType) {
-	var førsteTal = tal1
+func ombyt<EtAliasForEnType>(_ tal1 : inout EtAliasForEnType, med tal2 : inout EtAliasForEnType) {
+	let ombytning = tal2
 	
-	tal1 = tal2
-	tal2 = førsteTal
+	tal2 = tal1
+	tal1 = ombytning
 }
 
 ```
