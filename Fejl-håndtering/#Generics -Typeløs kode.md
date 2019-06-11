@@ -111,5 +111,43 @@ Ovenfor er **T** skiftet ud med **EtAliasForEnType** for at illustrere at T ikke
 
 Og som du kan se er argument typerne også skiftet fra **T** til **EtAliasForEnType**
 
-Så <T> er bare en guide for en type uden at angive typen, men kompileren kontrollere stadigvæk, at typerne der anvendes til funktionen er af samme type, og på den måde kan vi skrive kode som er type sikkert uden at vi har angivet typen. 
+Så <T> er bare en erstatning for en type uden at angive typen, men kompileren kontrollere stadigvæk, at typerne der anvendes til funktionen er af samme type, og på den måde kan vi skrive kode som er type sikkert uden at vi har angivet typen. 
 
+## Kræv en bestemt slags typer
+Det kan være nødvendigt at begrænse hvilke typer der kan anvendes trods alt.
+
+Det kan være at funktionen der tager imod en generic type, anvender en operator eller kalder en funktion som forudsætter at de typer der anvendes er af en bestemt slags.
+
+Det kaldes at man laver en constraint (begrænset) type.
+
+Tag eksempelvis følgende funktion som sammenligner 2 heltal
+
+```Swift
+func er(_ heltal1 : Int, ensMed heltal2: Int) -> Bool {
+	return heltal1 == heltal2
+}
+```
+
+Denne funktion vil man nok aldrig programmere, da du ikke behøver den for at sammenligne 2 heltal. Men hvis du nu skulle skrive funktionen om til at være en generic funktion så man i stedet kunne bruge den til at sammenligne flere typer, så ville du måske være fristet til at skrive følgende:
+
+```Swift
+func er<T>(_ værdi1 : T, ensMed værdi2:T) --> Bool {
+	return værdi1 == værdi2
+}
+```
+
+Men det vil give dig en fejl, fordi kompileren ikke kan garantere at den type der anvendes, faktisk kan sammenlignes med == operatoren. 
+
+For at sikre sig mod dette er du nød til at begrænse hvilke typer funktionen kan anvende, og det gør du ved at angive en protokol som argument typen skal understøtte.
+
+Da vores funktion sammenligner 2 værdier af samme type, altså undersøger om de er ens, kan vi fjerne fejlen ved at skrive:
+
+```Swift
+func er<T: Equatable>(_ værdi1 : T, ensMed værdi2:T) --> Bool {
+	return værdi1 == værdi2
+}
+```
+
+Her angiver vi en protokol som typen skal overholde og for at vi kan anvende == operatoren, så skal en type overholde Equatable protokollen.
+
+Når vi angiver denne begrænsning kan kompileren sikre sig mod at vi kommer til at anvende funktionen med en type der vil få programmet til at gå ned. 
